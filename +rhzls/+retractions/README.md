@@ -28,6 +28,6 @@ in `explore_manopt_examples.m`, delegate to these implementations.
 They preserve compatibility with existing scripts and function handles
 stored in the supplied MAT files.
 
-See the [main README](../../README.md#retractions-and-their-derivatives)
+See [Advanced usage](../../docs/USAGE.md#retractions-and-their-derivatives)
 for the algorithmic contract and an example of using RHZLS with a custom
 problem.
