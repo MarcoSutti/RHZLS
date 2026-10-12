@@ -123,9 +123,6 @@ B. Vandereycken, SIAM J. Sci. Comput., 43(3), A1803–A1831, 2021.
 }
 ```
 
-Please also identify the RHZLS version or commit used.
-[CITATION.cff](CITATION.cff) provides citation metadata.
-
 ## License
 
 Copyright (C) 2026 Marco Sutti. Distributed under
