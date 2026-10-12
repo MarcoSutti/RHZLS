@@ -1,0 +1,24 @@
+# Local dependencies: install Manopt separately with startup_rhzls(path).
+/external/manopt/
+
+# Generated MATLAB results, caches and local validation logs.
+*.mat
+*.fig
+*.asv
+*.m~
+*.log
+*.mex*
+*.mlappinstall
+
+# Distribution archives belong to GitHub Releases.
+*.zip
+*.tar.gz
+
+# Local work and machine-specific files.
+/archive/
+/tmp/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Reference PDF figures remain versioned; regenerate them deliberately.

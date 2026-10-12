@@ -1,0 +1,84 @@
+name: MATLAB tests
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      run_experiments:
+        description: Also run all 58 solver runs and generate the nine PDFs
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+concurrency:
+  group: matlab-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tests:
+    name: MATLAB R2025a / Manopt 8.0
+    runs-on: ubuntu-22.04
+    timeout-minutes: 60
+    steps:
+      - name: Check out RHZLS
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+
+      - name: Download and verify Manopt 8.0
+        shell: bash
+        run: |
+          set -euo pipefail
+          archive="$RUNNER_TEMP/Manopt_8.0.zip"
+          curl --fail --location --retry 3 \
+            https://www.manopt.org/downloads/Manopt_8.0.zip \
+            --output "$archive"
+          printf '%s  %s\n' \
+            b98aab24d9a98634f732edc9ae1d2beb827c83dfc416b1e0732d756574fa7b6a \
+            "$archive" | sha256sum --check --strict
+          mkdir -p external
+          unzip -q "$archive" -d external
+
+      - name: Set up MATLAB
+        uses: matlab-actions/setup-matlab@f9e43010f1ae678f7cfa0542fe2a4f60f7d1ad8d # v3
+        with:
+          release: R2025a
+
+      - name: Run the RHZLS regression suite
+        uses: matlab-actions/run-command@bfa857648f4895aa98a446fe41c85e0788421ed5 # v3
+        with:
+          command: >-
+            startup_rhzls(fullfile(pwd, 'external', 'manopt'));
+            report = test_rhzls;
+            assert(report.failed == 0 && report.passed == 30,
+            'Expected all 30 RHZLS regression tests to pass.');
+
+      - name: Run all experiments when requested manually
+        if: github.event_name == 'workflow_dispatch' && inputs.run_experiments
+        uses: matlab-actions/run-command@bfa857648f4895aa98a446fe41c85e0788421ed5 # v3
+        with:
+          command: >-
+            startup_rhzls(fullfile(pwd, 'external', 'manopt'));
+            results = run_all_experiments(false);
+            assert(results.totals.runs == 58 && numel(results.paths.pdfs) == 9);
+            for example = {'stiefel', 'sphere'},
+            comparison = results.demo.details.(example{1}).comparison;
+            for method = {'manopt', 'rhzls'},
+            run = comparison.(method{1});
+            assert(run.info(end).iter == run.details.options.maxiter);
+            assert(run.details.options.tolgradnorm == 0);
+            end; end;
+            suites = {results.accuracy, results.candidates};
+            methods = {{'manopt', 'rhzls', 'rhzls_approx'}, {'manopt', 'rhzls'}};
+            for suite = 1:numel(suites),
+            entries = suites{suite};
+            for k = 1:numel(entries),
+            for method = methods{suite},
+            run = entries(k).(method{1});
+            assert(isempty(run.error) && run.info(end).iter == run.options.maxiter);
+            assert(run.options.tolgradnorm == 0);
+            end; end; end;
