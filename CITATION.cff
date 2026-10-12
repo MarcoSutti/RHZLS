@@ -1,44 +1,59 @@
 cff-version: 1.2.0
-message: "If you use RHZLS, please cite this software and its scientific references."
+message: If you use RHZLS for your research, please cite the paper in preferred-citation.
 type: software
-title: "RHZLS: Riemannian Hager-Zhang Line Search"
+title: 'RHZLS: Riemannian Hager-Zhang Line Search'
 authors:
-  - family-names: "Sutti"
-    given-names: "Marco"
-repository-code: "https://github.com/MarcoSutti/RHZLS"
-url: "https://github.com/MarcoSutti/RHZLS"
-version: "0.1.0"
+- family-names: Sutti
+  given-names: Marco
+repository-code: https://github.com/MarcoSutti/RHZLS
+url: https://github.com/MarcoSutti/RHZLS
+version: 0.1.0
 license: GPL-3.0-or-later
 keywords:
-  - Riemannian optimization
-  - line search
-  - Hager-Zhang
-  - MATLAB
-  - Manopt
+- Riemannian optimization
+- line search
+- Hager-Zhang
+- MATLAB
+- Manopt
 references:
-  - type: article
-    title: "Riemannian Multigrid Line Search for Low-Rank Problems"
-    authors:
-      - family-names: "Sutti"
-        given-names: "Marco"
-      - family-names: "Vandereycken"
-        given-names: "Bart"
-    year: 2021
-    journal: "SIAM Journal on Scientific Computing"
-    volume: 43
-    issue: 3
-    start: "A1803"
-    end: "A1831"
-    doi: "10.1137/20M1337430"
-  - type: article
-    title: "Algorithm 851: CG_DESCENT, a Conjugate Gradient Method With Guaranteed Descent"
-    authors:
-      - family-names: "Hager"
-        given-names: "William W."
-      - family-names: "Zhang"
-        given-names: "Hongchao"
-    year: 2006
-    journal: "ACM Transactions on Mathematical Software"
-    volume: 32
-    issue: 1
-    doi: "10.1145/1132973.1132979"
+- type: article
+  title: Riemannian Multigrid Line Search for Low-Rank Problems
+  authors:
+  - family-names: Sutti
+    given-names: Marco
+  - family-names: Vandereycken
+    given-names: Bart
+  year: 2021
+  journal: SIAM Journal on Scientific Computing
+  volume: 43
+  issue: 3
+  start: A1803
+  end: A1831
+  doi: 10.1137/20M1337430
+- type: article
+  title: 'Algorithm 851: CG_DESCENT, a Conjugate Gradient Method With Guaranteed Descent'
+  authors:
+  - family-names: Hager
+    given-names: William W.
+  - family-names: Zhang
+    given-names: Hongchao
+  year: 2006
+  journal: ACM Transactions on Mathematical Software
+  volume: 32
+  issue: 1
+  doi: 10.1145/1132973.1132979
+preferred-citation:
+  type: article
+  title: Riemannian Multigrid Line Search for Low-Rank Problems
+  authors:
+  - family-names: Sutti
+    given-names: Marco
+  - family-names: Vandereycken
+    given-names: Bart
+  year: 2021
+  journal: SIAM Journal on Scientific Computing
+  volume: 43
+  issue: 3
+  start: A1803
+  end: A1831
+  doi: 10.1137/20M1337430

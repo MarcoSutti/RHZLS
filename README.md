@@ -26,7 +26,7 @@ examples, or reproduce all nine experiments with `run_all_experiments`.
 - [Use RHZLS with your own problem](#use-rhzls-with-your-own-problem)
 - [Retractions and their derivatives](#retractions-and-their-derivatives)
 - [Tests and package layout](#tests-and-package-layout)
-- [Citation](#citation)
+- [How to cite](#how-to-cite)
 - [Background and third-party code](#background-and-third-party-code)
 
 ## Setup and quick start
@@ -538,20 +538,33 @@ It holds earlier prototypes and intermediate artifacts, with original
 paths recorded in `archive/manifest.json`. It is not needed to run
 the package and is excluded from the distribution ZIP.
 
-## Citation
+## How to cite
 
-If you use this implementation in research, cite the RHZLS software by
-Marco Sutti and identify the version or Git commit used. Machine-readable
-software citation metadata is provided in [CITATION.cff](CITATION.cff).
+If you use RHZLS for your research, please kindly cite the paper
+*Riemannian multigrid line search for low-rank problems*, M. Sutti,
+B. Vandereycken, SIAM J. Sci. Comput., 43(3), A1803–A1831, 2021.
+[DOI: 10.1137/20M1337430](https://doi.org/10.1137/20M1337430).
 
-Also cite the works underlying the algorithms and the Manopt dependency:
+```bibtex
+@article{SuttiVandereycken2021,
+  author  = {Marco Sutti and Bart Vandereycken},
+  title   = {Riemannian multigrid line search for low-rank problems},
+  journal = {SIAM Journal on Scientific Computing},
+  volume  = {43},
+  number  = {3},
+  pages   = {A1803--A1831},
+  year    = {2021},
+  doi     = {10.1137/20M1337430}
+}
+```
 
-- Sutti and Vandereycken, *Riemannian multigrid line search for low-rank
-  problems*, for the Riemannian Hager–Zhang formulation.
-- Hager and Zhang, *Algorithm 851: CG_DESCENT, a conjugate gradient method
-  with guaranteed descent*, for the scalar line-search algorithm.
-- The [Manopt paper and citation guidance](https://www.manopt.org/about.html),
-  for the manifold factories and outer optimization solver.
+For reproducibility, also identify the RHZLS version or Git commit used.
+The package is authored by Marco Sutti. [CITATION.cff](CITATION.cff) provides
+machine-readable metadata and identifies the paper above as the preferred
+citation for GitHub's “Cite this repository” feature.
+
+Please also acknowledge the [Hager–Zhang scalar line-search algorithm](https://doi.org/10.1145/1132973.1132979)
+and the [Manopt dependency](https://www.manopt.org/about.html) where appropriate.
 
 ## Background and third-party code
 

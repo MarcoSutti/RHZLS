@@ -147,3 +147,13 @@ Il controllo visivo conferma le legende fuori dai pannelli e la loro
 leggibilita. La selezione da root, percorso relativo e sottocartella
 `manopt` e verificata in `matlab_official_manopt_paths.log`; i tre MAT
 registrano versione e commit dello snapshot usato.
+
+## First public source check
+
+On 2026-10-12, an archive of the first local Git commit was tested with an
+external official Manopt 8.0 installation and no pre-existing result MAT files.
+All 30 checks passed, all 58 solver runs reached their configured budgets, and
+the nine PDFs were generated. The local log ends with `GITHUB_CLEAN_SOURCE_PASS`.
+The workflow YAML was parsed and its action versions and Manopt checksum were
+verified. Hosted GitHub Actions has not run yet. `CITATION.cff` passes the
+official CFF 1.2 schema, including the preferred 2021 paper citation.
