@@ -13,7 +13,7 @@ stopping criteria.
 
 **Author:** Marco Sutti.
 
-**Start here:** install the pinned Manopt dependency, run the quick
+**Start here:** install Manopt 8.0, run the quick
 examples, or reproduce all nine experiments with `run_all_experiments`.
 
 ## Contents
