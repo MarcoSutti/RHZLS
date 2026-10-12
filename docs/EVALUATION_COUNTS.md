@@ -82,7 +82,7 @@ Focused regression tests independently
 count callback calls, verify cached-origin exclusion, distinguish invalid
 retractions from objective evaluations, and check Armijo backtracking and
 the public per-iteration fields. Current checks of the official dependency
-are recorded in [VALIDAZIONE.md](VALIDAZIONE.md). The earlier
+are recorded in [VALIDATION.md](VALIDATION.md). The earlier
 `matlab_evaluation_counts_tests.log` and `matlab_all_experiments.log`
 refer to the previous dependency.
 Before the per-example iteration limits were changed on 2026-10-09,

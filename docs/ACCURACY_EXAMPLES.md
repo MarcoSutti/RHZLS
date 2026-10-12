@@ -1,73 +1,75 @@
-# Esempi di accuratezza
+# Accuracy examples
 
-La suite comprende quattro famiglie con tre inizializzazioni prefissate
-(seed 1, 2, 3), per 36 esecuzioni. I risultati correnti sono salvati in
-`accuracy_examples.mat`. Dal 12 ottobre 2026 il confronto usa lo snapshot
-ufficiale Manopt descritto in [MANOPT_BASELINE.md](MANOPT_BASELINE.md),
-lasciando che `steepestdescent` selezioni direttamente il proprio Armijo
-di default. I controlli della migrazione sono in
-[VALIDAZIONE.md](VALIDAZIONE.md).
-Il solver esterno e `steepestdescent` Manopt, con lo stesso problema, punto
-iniziale, retrazione e `tolgradnorm=0` per i tre metodi.
-Dal 9 ottobre 2026, `maxiter` vale 200 per Rayleigh positivo, 850 per
-Brockett positivo, 60 per Procrustes e 250 per l'approssimazione di rango 2.
+The suite comprises four problem families with three fixed initializations
+(seeds 1, 2, 3), for a total of 36 runs. The current results are saved in
+`accuracy_examples.mat`. Since October 12, 2026, the comparison has used the
+official Manopt snapshot described in [MANOPT_BASELINE.md](MANOPT_BASELINE.md),
+allowing `steepestdescent` to select its own default Armijo line search
+directly. The migration checks are documented in
+[VALIDATION.md](VALIDATION.md).
+The outer solver is Manopt's `steepestdescent`, with the same problem,
+initial point, retraction, and `tolgradnorm=0` for all three methods.
+Since October 9, 2026, `maxiter` has been set to 200 for positive Rayleigh,
+850 for positive Brockett, 60 for Procrustes, and 250 for rank-2 approximation.
 
-## La distinzione necessaria nel line search
+## The distinction between line-search acceptance modes
 
-La versione precedente usa `acceptance='either'`: termina se passa Wolfe
-ordinaria oppure Wolfe approssimata. Vicino al minimo, il costo puo venire
-arrotondato allo stesso valore a punti diversi e la diminuzione ordinaria
-puo risultare soddisfatta numericamente anche per passi troppo grandi.
-Il nuovo test scalare riproduce questo caso con un costo quadratico di base
-`1e20`: la modalita approssimata rifiuta il passo che supera il minimo.
+The earlier version uses `acceptance='either'`: it terminates when either
+the ordinary Wolfe conditions or the approximate Wolfe conditions hold.
+Near a minimum, the cost can round to the same value at different points,
+and the ordinary sufficient-decrease condition can appear satisfied
+numerically even for excessively large steps. The new scalar test
+reproduces this situation with a quadratic cost whose base value is `1e20`:
+the approximate mode rejects the step that overshoots the minimum.
 
-E stata aggiunta l'opzione esplicita `acceptance='approximate'`, che richiede
-entrambi i limiti sulla derivata, oltre al limite sul costo. La modalita
-mista resta il default e non viene presentata come equivalente a questa.
-Hager e Zhang descrivono le modalita V1, V2 e V3 (Wolfe, Wolfe approssimate,
-oppure passaggio permanente dall'una all'altra), nella sezione 3, pagina 121,
-di [Algorithm 851: CG_DESCENT](https://people.clas.ufl.edu/hager/files/cg_code.pdf).
-Questo progetto implementa ora la selezione esplicita tra la modalita mista
-gia presente e la richiesta delle sole Wolfe approssimate; non implementa
-la politica adattiva V3 o l'intero solver a gradiente coniugato CG_DESCENT.
+The explicit option `acceptance='approximate'` was added to require both
+derivative bounds as well as the cost bound. The mixed mode remains the
+default and is not presented as equivalent to the approximate mode.
+Hager and Zhang describe modes V1, V2, and V3 (Wolfe, approximate Wolfe,
+or a permanent switch from one to the other) in Section 3, page 121, of
+[Algorithm 851: CG_DESCENT](https://people.clas.ufl.edu/hager/files/cg_code.pdf).
+This project now implements an explicit choice between the existing mixed
+mode and acceptance based only on approximate Wolfe conditions; it does
+not implement the adaptive V3 policy or the complete CG_DESCENT conjugate
+gradient solver.
 
-## Problemi, senza traslazioni artificiali del costo
+## Problems without artificial cost shifts
 
-1. **Rayleigh positivo sulla sfera S^11**: `f(x)=x'*D*x`, con
-   `D=diag(linspace(1,5,12))`, minimo 1 e minimizzatori +/-e1.
-2. **Brockett positivo sulla Stiefel St(12,2)**: `trace(X'*D*X*N)`,
-   con la stessa D e `N=diag([2,1])`. I primi due autovettori minimizzano
-   il costo, a meno dei segni delle colonne.
-3. **Procrustes ortogonale su SO(4)**: `f(Q)=0.5*norm(Q-A,'fro')^2`,
-   con `A=diag(1:4)`. Il minimo e 7, raggiunto in Q=I. Si usa la fabbrica
-   Stiefel quadrata, inizializzata con determinante positivo; la retrazione
-   polare mantiene questa componente delle matrici ortogonali.
-4. **Migliore approssimazione di rango 2**, sulla varieta di matrici 12x12
-   di rango fisso: `f(X)=0.5*norm(X-A,'fro')^2`, con
-   `A=diag(linspace(2,0.2,12))`. La soluzione e la SVD troncata; il minimo
-   positivo e la meta della somma dei quadrati dei valori singolari scartati.
+1. **Positive Rayleigh on the sphere S^11**: `f(x)=x'*D*x`, with
+   `D=diag(linspace(1,5,12))`, minimum 1, and minimizers +/-e1.
+2. **Positive Brockett on Stiefel St(12,2)**: `trace(X'*D*X*N)`,
+   with the same D and `N=diag([2,1])`. The first two eigenvectors minimize
+   the cost, up to column signs.
+3. **Orthogonal Procrustes on SO(4)**: `f(Q)=0.5*norm(Q-A,'fro')^2`,
+   with `A=diag(1:4)`. The minimum is 7, attained at Q=I. The square Stiefel
+   factory is used, initialized with positive determinant; the polar
+   retraction preserves this component of the orthogonal matrices.
+4. **Best rank-2 approximation**, on the manifold of 12x12 fixed-rank
+   matrices: `f(X)=0.5*norm(X-A,'fro')^2`, with
+   `A=diag(linspace(2,0.2,12))`. The solution is the truncated SVD; the
+   positive minimum is half the sum of the squared discarded singular values.
 
-La tabella seguente riporta le norme finali delle 36 esecuzioni con
-lo snapshot ufficiale Manopt. I valori sono confermati nei risultati
-correnti e nel log `matlab_official_manopt_experiments.log`.
+The following table reports the final gradient norms from the 36 runs with
+the official Manopt snapshot. The values are confirmed by the current
+results and the log `matlab_official_manopt_experiments.log`.
 
-| Esempio | Gradiente Armijo, intervallo sui 3 seed | Gradiente RHZLS approx., intervallo sui 3 seed | Iterazioni RHZLS approx. |
+| Example | Armijo gradient norm, range over 3 seeds | RHZLS approx. gradient norm, range over 3 seeds | RHZLS approx. iterations |
 |---|---:|---:|---|
-| Rayleigh positivo | 2.981e-8 -- 1.025e-7 | 5.070e-18 -- 1.987e-15 | 200 per tutti i seed |
-| Brockett positivo | 4.216e-8 -- 4.230e-7 | 2.311e-17 -- 1.233e-15 | 850 per tutti i seed |
-| Procrustes ortogonale | 3.026e-8 -- 8.843e-8 | 5.636e-32 -- 5.163e-27 | 60 per tutti i seed |
-| Approssimazione rango 2 | 2.441e-8 -- 3.623e-8 | 4.660e-15 -- 3.823e-13 | 250 per tutti i seed |
+| Positive Rayleigh | 2.981e-8 -- 1.025e-7 | 5.070e-18 -- 1.987e-15 | 200 for every seed |
+| Positive Brockett | 4.216e-8 -- 4.230e-7 | 2.311e-17 -- 1.233e-15 | 850 for every seed |
+| Orthogonal Procrustes | 3.026e-8 -- 8.843e-8 | 5.636e-32 -- 5.163e-27 | 60 for every seed |
+| Rank-2 approximation | 2.441e-8 -- 3.623e-8 | 4.660e-15 -- 3.823e-13 | 250 for every seed |
 
-Tutti i metodi completano il budget previsto: la tolleranza sul gradiente
-non causa arresti. Le norme piccole sono residui calcolati, non una misura
-del numero di cifre accurate: nei problemi strutturati alcune coordinate
-possono continuare a diminuire sotto eps. Non vengono imposti plateau
-artificiali o aggiunte iterazioni alle storie.
+All methods complete their specified iteration budgets: gradient tolerance
+does not trigger termination. Small norms are computed residuals, not a
+measure of the number of accurate digits: in structured problems, some
+coordinates can continue to decrease below eps. No artificial plateaus
+are imposed, and no iterations are added to the histories.
 
-Per una figura illustrativa si consigliano Procrustes e l'approssimazione
-a rango fisso: hanno un minimo positivo naturale e una soluzione nota.
+Procrustes and fixed-rank approximation are recommended for an illustrative
+figure: both have a natural positive minimum and a known solution.
 
-## Riproduzione
+## Reproduction
 
 ```matlab
 cd('C:/path/to/RHZLS')
@@ -76,34 +78,34 @@ set(groot, 'defaultFigureVisible', 'on')
 results = run_accuracy_examples;
 ```
 
-Per rigenerare solo le nuove figure dai risultati salvati:
+To regenerate only the new figures from the saved results:
 
 ```matlab
 plot_accuracy_examples
 ```
 
-Per ciascuna famiglia, un solo `accuracy_*.pdf` mostra il seed 1 e le tre
-metriche per Armijo e RHZLS approssimata (le curve della modalita `either`
-sono escluse dai grafici):
-errore relativo del costo, gradiente diviso per la norma iniziale comune,
-distanza relativa dalla soluzione. Non si generano figure `_control` separate.
-Gli altri due seed restano disponibili nei risultati e nel log completo.
-Gli errori del costo vengono divisi per `abs(f_star)`; se il minimo e zero,
-si usa `abs(f_0-f_star)`. I dati originali nei MAT restano assoluti.
-I valori arrotondati a zero vengono
-visualizzati a eps. Le distanze e i gradienti sono valutati indipendentemente
-dalla sottrazione dei costi. Le curve terminano all'arresto effettivo.
+For each family, a single `accuracy_*.pdf` shows seed 1 and three metrics
+for Armijo and approximate RHZLS (curves for the `either` mode are excluded
+from the plots): relative cost error, gradient norm divided by the common
+initial gradient norm, and relative distance to the solution. Separate
+`_control` figures are not generated. The other two seeds remain available
+in the results and the complete log.
+Cost errors are divided by `abs(f_star)`; when the minimum is zero,
+`abs(f_0-f_star)` is used. The original MAT data remain absolute.
+Values that round to zero are displayed at eps. Distances and gradients
+are evaluated independently of cost subtraction. Curves end at the actual
+termination of each run.
 
-La finestra visualizzata comprende tutte le iterazioni: 200 per la sfera,
-850 per Stiefel, 60 per Procrustes e 250 per il rango fisso.
+The displayed range includes all iterations: 200 for the sphere, 850 for
+Stiefel, 60 for Procrustes, and 250 for fixed rank.
 
-Per selezionare questa modalita in un esempio esistente:
+To select this mode in an existing example:
 
 ```matlab
 opts.solver.linesearch = struct('acceptance','approximate');
 run_rhzls('sphere', opts);
 ```
 
-La suite di regressione comprende il controllo del passo eccessivo
-accettabile solo per arrotondamento del costo. L'esito corrente dei test
-con Manopt ufficiale e riportato in [VALIDAZIONE.md](VALIDAZIONE.md).
+The regression suite includes a check for an excessive step that is
+acceptable only because of cost rounding. The current test results with
+official Manopt are reported in [VALIDATION.md](VALIDATION.md).

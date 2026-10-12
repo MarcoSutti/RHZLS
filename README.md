@@ -185,8 +185,7 @@ save all runs, and display seed 1 in their PDFs. The accuracy suite performs
 
 Detailed problem definitions, reference solutions, and recorded results
 are available in [ACCURACY_EXAMPLES.md](docs/ACCURACY_EXAMPLES.md) and
-[MANOPT_CANDIDATES.md](docs/MANOPT_CANDIDATES.md). These supplementary
-experiment notes are currently in Italian.
+[MANOPT_CANDIDATES.md](docs/MANOPT_CANDIDATES.md).
 
 ### What is being compared?
 
@@ -489,7 +488,7 @@ exact retraction velocities, pullback derivatives, fixed-rank domain
 handling, solver behavior, the Armijo comparison, and callback counts with
 cached origins and invalid retractions. All 30 passed with the official
 dependency in MATLAB R2025a on 2026-10-12. Current migration checks and
-the development logs are described in [VALIDAZIONE.md](docs/VALIDAZIONE.md).
+the development logs are described in [VALIDATION.md](docs/VALIDATION.md).
 The official-Manopt migration rerun completed all **58 optimizations** and
 regenerated the nine PDFs; its log is
 `docs/matlab_official_manopt_experiments.log`. Every saved history reaches
